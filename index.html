@@ -9,79 +9,112 @@
     body {
       margin: 0;
       font-family: system-ui, -apple-system;
-      background: linear-gradient(135deg, #f5f5f4, #e7e5e4);
+      background: radial-gradient(circle at top, #fef3c7, #e7e5e4);
+      color: #1f2937;
       text-align: center;
       padding: 20px;
     }
 
     h1 {
+      margin-bottom: 10px;
+      font-size: 1.8rem;
+    }
+
+    .subtitle {
+      color: #6b7280;
       margin-bottom: 20px;
     }
 
     canvas {
-      margin: 20px auto;
       display: block;
-    }
-
-    .card {
-      background: white;
-      border-radius: 22px;
-      padding: 20px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-      max-width: 400px;
-      margin: 20px auto;
+      margin: 0 auto 20px;
+      filter: drop-shadow(0 20px 30px rgba(0,0,0,0.15));
     }
 
     button {
       padding: 12px 18px;
-      border-radius: 14px;
+      border-radius: 16px;
       border: none;
       font-weight: 600;
-      background: #16a34a;
-      color: white;
       margin: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
     }
 
-    button.secondary {
-      background: #e5e7eb;
+    button:active {
+      transform: scale(0.95);
+    }
+
+    .primary {
+      background: linear-gradient(135deg, #16a34a, #22c55e);
+      color: white;
+    }
+
+    .secondary {
+      background: white;
       color: #111;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    }
+
+    .card {
+      background: white;
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.12);
+      max-width: 420px;
+      margin: 20px auto;
+      animation: pop 0.3s ease;
+    }
+
+    @keyframes pop {
+      from { transform: scale(0.95); opacity: 0 }
+      to { transform: scale(1); opacity: 1 }
+    }
+
+    ul {
+      text-align: left;
+    }
+
+    a {
+      color: #16a34a;
+      font-weight: 600;
+      text-decoration: none;
     }
   </style>
 </head>
 <body>
 
 <h1>🍽️ Hvad skal vi have til aftensmad?</h1>
+<div class="subtitle">Spin hjulet – slip beslutningen</div>
 
-<canvas id="wheel" width="300" height="300"></canvas>
+<canvas id="wheel" width="320" height="320"></canvas>
 
-<button onclick="spin()">Spin hjulet</button>
+<button class="primary" onclick="spin()">Spin hjulet</button>
 
 <div id="result"></div>
 
 <script>
 const allRecipes = [
-  {
-    name: "Lasagne",
-    url: "https://www.valdemarsro.dk/klassisk-lasagne/",
-    ingredients: ["Oksekød", "Lasagneplader", "Tomatsauce"],
-    leftovers: ["Pasta Bolognese"]
-  },
-  {
-    name: "Pasta Bolognese",
-    url: "https://www.valdemarsro.dk/spaghetti-bolognese/",
-    ingredients: ["Pasta", "Kødsauce"]
-  },
-  {
-    name: "Stegt kylling",
-    url: "https://www.valdemarsro.dk/stegt-kylling/",
-    ingredients: ["Hel kylling", "Smør"],
-    leftovers: ["Kyllingewraps"]
-  },
-  {
-    name: "Kyllingewraps",
-    url: "https://www.valdemarsro.dk/kyllingewrap/",
-    ingredients: ["Wraps", "Kylling", "Salat"]
-  }
+  { name:"Lasagne", url:"https://www.valdemarsro.dk/klassisk-lasagne/", ingredients:["Oksekød","Lasagneplader","Tomatsauce","Ost"], leftovers:["Pasta Bolognese"] },
+  { name:"Pasta Bolognese", url:"https://www.valdemarsro.dk/spaghetti-bolognese/", ingredients:["Pasta","Kødsauce"] },
+  { name:"Chili con carne", url:"https://www.valdemarsro.dk/chili-con-carne/", ingredients:["Oksekød","Bønner","Tomat"], leftovers:["Chili tacos"] },
+  { name:"Chili tacos", url:"https://www.valdemarsro.dk/tacos/", ingredients:["Tortillas","Chili"] },
+  { name:"Stegt kylling", url:"https://www.valdemarsro.dk/stegt-kylling/", ingredients:["Hel kylling","Smør"], leftovers:["Kyllingewraps","Kyllingesalat"] },
+  { name:"Kyllingewraps", url:"https://www.valdemarsro.dk/kyllingewrap/", ingredients:["Wraps","Kylling","Salat"] },
+  { name:"Kyllingesalat", url:"https://www.valdemarsro.dk/kyllingesalat/", ingredients:["Kylling","Mayonnaise"] },
+  { name:"Frikadeller", url:"https://www.valdemarsro.dk/frikadeller/", ingredients:["Hakket svinekød","Æg","Løg"], leftovers:["Frikadellemad"] },
+  { name:"Frikadellemad", url:"https://www.valdemarsro.dk/frikadellemad/", ingredients:["Rugbrød","Frikadeller"] },
+  { name:"Carbonara", url:"https://www.valdemarsro.dk/pasta-carbonara/", ingredients:["Pasta","Æg","Bacon"] },
+  { name:"Burger", url:"https://www.valdemarsro.dk/hjemmelavede-burgere/", ingredients:["Boller","Oksekød"] },
+  { name:"Pizza", url:"https://www.valdemarsro.dk/pizza/", ingredients:["Pizzadej","Ost"] },
+  { name:"Wokret", url:"https://www.valdemarsro.dk/wok/", ingredients:["Grønt","Nudler"] },
+  { name:"Risotto", url:"https://www.valdemarsro.dk/risotto/", ingredients:["Ris","Bouillon"] },
+  { name:"Poke bowl", url:"https://www.valdemarsro.dk/poke-bowl/", ingredients:["Ris","Fisk"] },
+  { name:"Omelet", url:"https://www.valdemarsro.dk/omelet/", ingredients:["Æg"] },
+  { name:"Falafel", url:"https://www.valdemarsro.dk/falafel/", ingredients:["Kikærter"] },
+  { name:"Suppe", url:"https://www.valdemarsro.dk/groentsagssuppe/", ingredients:["Grøntsager"] },
+  { name:"Tarteletter", url:"https://www.valdemarsro.dk/tarteletter/", ingredients:["Høns i asparges"] },
+  { name:"Fiskefrikadeller", url:"https://www.valdemarsro.dk/fiskefrikadeller/", ingredients:["Fiskefars"] }
 ];
 
 let recipes = [...allRecipes];
@@ -92,18 +125,22 @@ const ctx = canvas.getContext("2d");
 
 function drawWheel() {
   const slice = (2 * Math.PI) / recipes.length;
+  ctx.clearRect(0,0,320,320);
+
   recipes.forEach((r, i) => {
     ctx.beginPath();
-    ctx.moveTo(150,150);
+    ctx.moveTo(160,160);
     ctx.fillStyle = i % 2 ? "#fde68a" : "#bbf7d0";
-    ctx.arc(150,150,150, i*slice, (i+1)*slice);
+    ctx.arc(160,160,160, i*slice, (i+1)*slice);
     ctx.fill();
 
     ctx.save();
-    ctx.translate(150,150);
+    ctx.translate(160,160);
     ctx.rotate(i*slice + slice/2);
+    ctx.textAlign = "right";
     ctx.fillStyle = "#111";
-    ctx.fillText(r.name, 60, 5);
+    ctx.font = "14px system-ui";
+    ctx.fillText(r.name, 145, 5);
     ctx.restore();
   });
 }
@@ -111,7 +148,7 @@ function drawWheel() {
 drawWheel();
 
 function spin() {
-  angle += Math.random() * 2000 + 1000;
+  angle += Math.random() * 2000 + 1500;
   canvas.style.transition = "transform 4s cubic-bezier(.17,.67,.83,.67)";
   canvas.style.transform = `rotate(${angle}deg)`;
 
@@ -123,15 +160,17 @@ function spin() {
 }
 
 function showResult(r) {
-  const div = document.getElementById("result");
-  div.innerHTML = `
+  document.getElementById("result").innerHTML = `
     <div class="card">
       <h2>${r.name}</h2>
       <a href="${r.url}" target="_blank">Se opskrift</a>
-      <h3>Indkøbsseddel</h3>
+
+      <h3>🛒 Indkøb</h3>
       <ul>${r.ingredients.map(i => `<li>${i}</li>`).join("")}</ul>
-      <button onclick="spin()">Spin igen</button>
+
+      <button class="primary" onclick="spin()">Spin igen</button>
       ${r.leftovers ? `<button class="secondary" onclick="useLeftovers(${JSON.stringify(r.leftovers)})">Brug rester i morgen</button>` : ""}
+      <button class="secondary" onclick="reset()">Nulstil</button>
     </div>
   `;
 }
@@ -139,8 +178,15 @@ function showResult(r) {
 function useLeftovers(names) {
   recipes = allRecipes.filter(r => names.includes(r.name));
   angle = 0;
-  ctx.clearRect(0,0,300,300);
   drawWheel();
+  document.getElementById("result").innerHTML = "";
+}
+
+function reset() {
+  recipes = [...allRecipes];
+  angle = 0;
+  drawWheel();
+  document.getElementById("result").innerHTML = "";
 }
 </script>
 
