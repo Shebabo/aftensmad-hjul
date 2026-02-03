@@ -3,15 +3,21 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Aftensmadshjulet</title>
+<title>Aftensmadshjulet Premium</title>
 <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.development.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.development.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/babel-standalone@6/babel.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.2/dist/tailwind.min.css" rel="stylesheet">
 <style>
-body { margin:0; font-family: system-ui,-apple-system; background: linear-gradient(180deg,#fff7f0,#fde5d2); }
-canvas { border-radius: 50%; background: #fff; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
-.arrow { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); font-size: 30px; }
+body { 
+  margin:0; font-family:system-ui,-apple-system; 
+  background: linear-gradient(135deg,#fff7f0,#fcd5b5,#fff1e6); 
+  display:flex; justify-content:center; align-items:center; min-height:100vh;
+}
+canvas { border-radius:50%; box-shadow:0 20px 50px rgba(0,0,0,0.3); }
+.arrow { position:absolute; top:-18px; left:50%; transform:translateX(-50%); font-size:36px; text-shadow:0 2px 5px rgba(0,0,0,0.3);}
+.card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.card:hover { transform: translateY(-5px); box-shadow:0 25px 40px rgba(0,0,0,0.25);}
 </style>
 </head>
 <body>
@@ -19,28 +25,28 @@ canvas { border-radius: 50%; background: #fff; box-shadow: 0 20px 40px rgba(0,0,
 
 <script type="text/babel">
 
-// ===== DATA: 20 retter uden fisk =====
-const recipes = [
-{name:"Lasagne", ingredients:[{name:"Oksekød",amount:400,unit:"g"},{name:"Lasagneplader",amount:6,unit:"stk"},{name:"Tomatsauce",amount:400,unit:"ml"},{name:"Ost",amount:100,unit:"g"}],url:"#",leftovers:["Pasta Bolognese"]},
-{name:"Pasta Bolognese", ingredients:[{name:"Pasta",amount:250,unit:"g"},{name:"Oksekød",amount:300,unit:"g"},{name:"Tomatsauce",amount:400,unit:"ml"},{name:"Løg",amount:1,unit:"stk"}],url:"#"},
-{name:"Stegt kylling", ingredients:[{name:"Hel kylling",amount:1,unit:"kg"},{name:"Smør",amount:50,unit:"g"}],url:"#",leftovers:["Kyllingewraps","Kyllingesalat"]},
-{name:"Kyllingewraps", ingredients:[{name:"Wraps",amount:2,unit:"stk"},{name:"Kylling",amount:200,unit:"g"},{name:"Salat",amount:50,unit:"g"}],url:"#"},
-{name:"Kyllingesalat", ingredients:[{name:"Kylling",amount:150,unit:"g"},{name:"Salat",amount:50,unit:"g"},{name:"Mayonnaise",amount:20,unit:"ml"}],url:"#"},
-{name:"Chili con carne", ingredients:[{name:"Oksekød",amount:400,unit:"g"},{name:"Bønner",amount:200,unit:"g"},{name:"Tomater",amount:400,unit:"g"}],url:"#",leftovers:["Chili tacos"]},
-{name:"Chili tacos", ingredients:[{name:"Tortillas",amount:2,unit:"stk"},{name:"Chili con carne rester",amount:200,unit:"g"},{name:"Salat",amount:30,unit:"g"}],url:"#"},
-{name:"Frikadeller", ingredients:[{name:"Hakket svinekød",amount:500,unit:"g"},{name:"Æg",amount:2,unit:"stk"},{name:"Løg",amount:1,unit:"stk"}],url:"#",leftovers:["Frikadellemad"]},
-{name:"Frikadellemad", ingredients:[{name:"Rugbrød",amount:2,unit:"skiver"},{name:"Frikadeller",amount:2,unit:"stk"},{name:"Agurk",amount:30,unit:"g"}],url:"#"},
-{name:"Carbonara", ingredients:[{name:"Pasta",amount:250,unit:"g"},{name:"Æg",amount:2,unit:"stk"},{name:"Bacon",amount:150,unit:"g"}],url:"#"},
-{name:"Burger", ingredients:[{name:"Burgerboller",amount:2,unit:"stk"},{name:"Oksekød",amount:200,unit:"g"},{name:"Salat",amount:20,unit:"g"}],url:"#"},
-{name:"Pizza", ingredients:[{name:"Pizzadej",amount:1,unit:"stk"},{name:"Tomatsauce",amount:200,unit:"ml"},{name:"Ost",amount:100,unit:"g"}],url:"#"},
-{name:"Wokret", ingredients:[{name:"Grøntsager",amount:200,unit:"g"},{name:"Nudler",amount:100,unit:"g"},{name:"Soyasauce",amount:20,unit:"ml"}],url:"#"},
-{name:"Risotto", ingredients:[{name:"Ris",amount:200,unit:"g"},{name:"Bouillon",amount:500,unit:"ml"}],url:"#"},
-{name:"Omelet", ingredients:[{name:"Æg",amount:3,unit:"stk"},{name:"Mælk",amount:50,unit:"ml"}],url:"#"},
-{name:"Falafel", ingredients:[{name:"Kikærter",amount:250,unit:"g"},{name:"Wraps",amount:2,unit:"stk"}],url:"#"},
-{name:"Suppe", ingredients:[{name:"Grøntsager",amount:400,unit:"g"},{name:"Bouillon",amount:500,unit:"ml"}],url:"#"},
-{name:"Tarteletter", ingredients:[{name:"Høns i asparges",amount:1,unit:"dåse"},{name:"Tarteletskaller",amount:4,unit:"stk"}],url:"#"},
-{name:"Kikærtegryde", ingredients:[{name:"Kikærter",amount:200,unit:"g"},{name:"Tomatsauce",amount:300,unit:"ml"},{name:"Grøntsager",amount:150,unit:"g"}],url:"#",leftovers:["Kikærtesalat"]},
-{name:"Kikærtesalat", ingredients:[{name:"Kikærter",amount:150,unit:"g"},{name:"Salat",amount:50,unit:"g"},{name:"Dressing",amount:20,unit:"ml"}],url:"#"}
+// ===== DATA =====
+const recipes=[
+{name:"Lasagne",ingredients:[{name:"Oksekød",amount:400,unit:"g"},{name:"Lasagneplader",amount:6,unit:"stk"},{name:"Tomatsauce",amount:400,unit:"ml"},{name:"Ost",amount:100,unit:"g"}],url:"#",leftovers:["Pasta Bolognese"]},
+{name:"Pasta Bolognese",ingredients:[{name:"Pasta",amount:250,unit:"g"},{name:"Oksekød",amount:300,unit:"g"},{name:"Tomatsauce",amount:400,unit:"ml"},{name:"Løg",amount:1,unit:"stk"}],url:"#"},
+{name:"Stegt kylling",ingredients:[{name:"Hel kylling",amount:1,unit:"kg"},{name:"Smør",amount:50,unit:"g"}],url:"#",leftovers:["Kyllingewraps","Kyllingesalat"]},
+{name:"Kyllingewraps",ingredients:[{name:"Wraps",amount:2,unit:"stk"},{name:"Kylling",amount:200,unit:"g"},{name:"Salat",amount:50,unit:"g"}],url:"#"},
+{name:"Kyllingesalat",ingredients:[{name:"Kylling",amount:150,unit:"g"},{name:"Salat",amount:50,unit:"g"},{name:"Mayonnaise",amount:20,unit:"ml"}],url:"#"},
+{name:"Chili con carne",ingredients:[{name:"Oksekød",amount:400,unit:"g"},{name:"Bønner",amount:200,unit:"g"},{name:"Tomater",amount:400,unit:"g"}],url:"#",leftovers:["Chili tacos"]},
+{name:"Chili tacos",ingredients:[{name:"Tortillas",amount:2,unit:"stk"},{name:"Chili con carne rester",amount:200,unit:"g"},{name:"Salat",amount:30,unit:"g"}],url:"#"},
+{name:"Frikadeller",ingredients:[{name:"Hakket svinekød",amount:500,unit:"g"},{name:"Æg",amount:2,unit:"stk"},{name:"Løg",amount:1,unit:"stk"}],url:"#",leftovers:["Frikadellemad"]},
+{name:"Frikadellemad",ingredients:[{name:"Rugbrød",amount:2,unit:"skiver"},{name:"Frikadeller",amount:2,unit:"stk"},{name:"Agurk",amount:30,unit:"g"}],url:"#"},
+{name:"Carbonara",ingredients:[{name:"Pasta",amount:250,unit:"g"},{name:"Æg",amount:2,unit:"stk"},{name:"Bacon",amount:150,unit:"g"}],url:"#"},
+{name:"Burger",ingredients:[{name:"Burgerboller",amount:2,unit:"stk"},{name:"Oksekød",amount:200,unit:"g"},{name:"Salat",amount:20,unit:"g"}],url:"#"},
+{name:"Pizza",ingredients:[{name:"Pizzadej",amount:1,unit:"stk"},{name:"Tomatsauce",amount:200,unit:"ml"},{name:"Ost",amount:100,unit:"g"}],url:"#"},
+{name:"Wokret",ingredients:[{name:"Grøntsager",amount:200,unit:"g"},{name:"Nudler",amount:100,unit:"g"},{name:"Soyasauce",amount:20,unit:"ml"}],url:"#"},
+{name:"Risotto",ingredients:[{name:"Ris",amount:200,unit:"g"},{name:"Bouillon",amount:500,unit:"ml"}],url:"#"},
+{name:"Omelet",ingredients:[{name:"Æg",amount:3,unit:"stk"},{name:"Mælk",amount:50,unit:"ml"}],url:"#"},
+{name:"Falafel",ingredients:[{name:"Kikærter",amount:250,unit:"g"},{name:"Wraps",amount:2,unit:"stk"}],url:"#"},
+{name:"Suppe",ingredients:[{name:"Grøntsager",amount:400,unit:"g"},{name:"Bouillon",amount:500,unit:"ml"}],url:"#"},
+{name:"Tarteletter",ingredients:[{name:"Høns i asparges",amount:1,unit:"dåse"},{name:"Tarteletskaller",amount:4,unit:"stk"}],url:"#"},
+{name:"Kikærtegryde",ingredients:[{name:"Kikærter",amount:200,unit:"g"},{name:"Tomatsauce",amount:300,unit:"ml"},{name:"Grøntsager",amount:150,unit:"g"}],url:"#",leftovers:["Kikærtesalat"]},
+{name:"Kikærtesalat",ingredients:[{name:"Kikærter",amount:150,unit:"g"},{name:"Salat",amount:50,unit:"g"},{name:"Dressing",amount:20,unit:"ml"}],url:"#"}
 ];
 
 // ===== APP =====
@@ -49,34 +55,35 @@ function App(){
   const [selected,setSelected]=React.useState(null);
   const [leftovers,setLeftovers]=React.useState([]);
   const [showWheel,setShowWheel]=React.useState(false);
-  const canvasRef = React.useRef(null);
-  const [spinning,setSpinning] = React.useState(false);
+  const [currentPool,setCurrentPool]=React.useState(recipes);
+  const canvasRef=React.useRef(null);
+  const [spinning,setSpinning]=React.useState(false);
 
-  // Farver til hjulet
-  const colors = ["#FEC89A","#FFB997","#F6A6B2","#FFD6BA","#FFABAB","#FDCB82","#F8B195","#F67280","#C06C84","#6C5B7B",
-                  "#355C7D","#6C5B7B","#C06C84","#F67280","#F8B195","#FDCB82","#FFABAB","#FFD6BA","#F6A6B2","#FFB997"];
+  const colors=["#FFB997","#F67280","#C06C84","#6C5B7B","#355C7D","#F8B195","#FDCB82","#FFD6BA","#FEC89A","#F6A6B2",
+                "#FFABAB","#F67280","#C06C84","#6C5B7B","#355C7D","#F8B195","#FDCB82","#FFD6BA","#FEC89A","#F6A6B2"];
 
-  React.useEffect(()=>{
-    drawWheel();
-  },[showWheel]);
+  React.useEffect(()=>{ drawWheel(); },[showWheel,currentPool]);
 
   const drawWheel=()=>{
     const canvas=canvasRef.current;
     if(!canvas) return;
     const ctx=canvas.getContext("2d");
-    const num=recipes.length;
-    const angle = 2*Math.PI/num;
+    const num=currentPool.length;
+    const angle=2*Math.PI/num;
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    recipes.forEach((r,i)=>{
+    currentPool.forEach((r,i)=>{
+      const gradient=ctx.createRadialGradient(160,160,40,160,160,160);
+      gradient.addColorStop(0,'#fff');
+      gradient.addColorStop(1,colors[i%colors.length]);
       ctx.beginPath();
       ctx.moveTo(160,160);
-      ctx.fillStyle=colors[i%colors.length];
+      ctx.fillStyle=gradient;
       ctx.arc(160,160,160,i*angle,(i+1)*angle);
       ctx.lineTo(160,160);
       ctx.fill();
       ctx.save();
       ctx.translate(160,160);
-      ctx.rotate(i*angle + angle/2);
+      ctx.rotate(i*angle+angle/2);
       ctx.textAlign="right";
       ctx.fillStyle="#3f2d20";
       ctx.font="bold 14px Arial";
@@ -85,43 +92,51 @@ function App(){
     });
   };
 
-  const spin=()=>{
+  const spin=(pool=currentPool)=>{
     if(spinning) return;
     setSpinning(true);
     const canvas=canvasRef.current;
-    const spins = Math.random()*360 + 720; // rotation degrees
+    const spins=Math.random()*360+1080;
     canvas.style.transition="transform 4s cubic-bezier(.17,.67,.83,.67)";
     canvas.style.transform=`rotate(${spins}deg)`;
     setTimeout(()=>{
-      const slice=360/recipes.length;
-      const index=Math.floor(((360-(spins%360))/slice))%recipes.length;
-      const selectedRecipe = recipes[index];
+      const slice=360/pool.length;
+      const index=Math.floor(((360-(spins%360))/slice))%pool.length;
+      const selectedRecipe=pool[index];
       setSelected(selectedRecipe);
-      if(selectedRecipe.leftovers) setLeftovers(selectedRecipe.leftovers);
-      else setLeftovers([]);
+      if(selectedRecipe.leftovers) setLeftovers(selectedRecipe.leftovers); else setLeftovers([]);
       canvas.style.transition="";
       canvas.style.transform="";
       setSpinning(false);
     },4100);
   };
 
-  return <div className="p-4 text-center">
-    {!showWheel && <div className="mt-16">
-      <h1 className="text-4xl font-extrabold mb-4">🍽️ Aftensmadshjulet</h1>
+  const spinLeftovers=()=>{
+    if(leftovers.length===0) return;
+    const leftoverPool=currentPool.filter(r=>leftovers.includes(r.name));
+    if(leftoverPool.length>0) spin(leftoverPool);
+  };
+
+  return <div className="flex flex-col items-center justify-center w-full p-4">
+    {!showWheel && <div className="text-center mt-12">
+      <h1 className="text-4xl font-extrabold mb-4">🍽️ Aftensmadshjulet Premium</h1>
       <p className="text-lg mb-6 text-gray-700">Vælg antal personer og lad hjulet bestemme aftensmaden!</p>
       <input type="number" min="1" max="12" value={people} onChange={e=>setPeople(parseInt(e.target.value)||2)} className="p-2 border rounded w-20 text-center"/>
       <button onClick={()=>setShowWheel(true)} className="ml-4 px-6 py-3 bg-orange-600 text-white rounded-full font-bold shadow-lg hover:bg-orange-500 transition">Fortsæt</button>
     </div>}
 
-    {showWheel && <div className="mt-6">
-      <div className="relative w-80 h-80 mx-auto">
+    {showWheel && <div className="mt-6 flex flex-col items-center">
+      <div className="relative w-80 h-80">
         <div className="arrow">⬇️</div>
         <canvas ref={canvasRef} width="320" height="320"></canvas>
       </div>
-      <button onClick={spin} className="mt-4 px-6 py-3 bg-red-600 text-white rounded-full font-bold shadow-lg hover:bg-red-500 transition">Spin</button>
+      <div className="flex flex-col mt-4 items-center">
+        <button onClick={()=>spin()} className="px-6 py-3 bg-red-600 text-white rounded-full font-bold shadow-lg hover:bg-red-500 transition mb-2">Spin</button>
+        {leftovers.length>0 && <button onClick={spinLeftovers} className="px-6 py-3 bg-green-600 text-white rounded-full font-bold shadow-lg hover:bg-green-500 transition">Spin med rester</button>}
+      </div>
     </div>}
 
-    {selected && <div className="max-w-md mx-auto bg-white rounded-xl shadow-2xl p-6 mt-6 text-left">
+    {selected && <div className="card max-w-md bg-white rounded-2xl shadow-2xl p-6 mt-6 text-left">
       <h3 className="text-2xl font-bold mb-2">{selected.name}</h3>
       <a href={selected.url} target="_blank" className="text-blue-600 underline mb-2 block">Se opskrift</a>
       <h4 className="font-semibold">🛒 Indkøb for {people} personer:</h4>
@@ -134,7 +149,6 @@ function App(){
           {leftovers.map(l=><li key={l}>{l}</li>)}
         </ul>
       </div>}
-      <button onClick={spin} className="mt-4 px-6 py-3 bg-green-600 text-white rounded-full font-bold shadow-lg hover:bg-green-500 transition">Spin igen</button>
     </div>}
   </div>
 }
