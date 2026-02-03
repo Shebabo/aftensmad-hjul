@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aftensmadshjul</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system;
+      background: linear-gradient(135deg, #f5f5f4, #e7e5e4);
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    canvas {
+      margin: 20px auto;
+      display: block;
+    }
+
+    .card {
+      background: white;
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      max-width: 400px;
+      margin: 20px auto;
+    }
+
+    button {
+      padding: 12px 18px;
+      border-radius: 14px;
+      border: none;
+      font-weight: 600;
+      background: #16a34a;
+      color: white;
+      margin: 6px;
+    }
+
+    button.secondary {
+      background: #e5e7eb;
+      color: #111;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🍽️ Hvad skal vi have til aftensmad?</h1>
+
+<canvas id="wheel" width="300" height="300"></canvas>
+
+<button onclick="spin()">Spin hjulet</button>
+
+<div id="result"></div>
+
+<script>
+const allRecipes = [
+  {
+    name: "Lasagne",
+    url: "https://www.valdemarsro.dk/klassisk-lasagne/",
+    ingredients: ["Oksekød", "Lasagneplader", "Tomatsauce"],
+    leftovers: ["Pasta Bolognese"]
+  },
+  {
+    name: "Pasta Bolognese",
+    url: "https://www.valdemarsro.dk/spaghetti-bolognese/",
+    ingredients: ["Pasta", "Kødsauce"]
+  },
+  {
+    name: "Stegt kylling",
+    url: "https://www.valdemarsro.dk/stegt-kylling/",
+    ingredients: ["Hel kylling", "Smør"],
+    leftovers: ["Kyllingewraps"]
+  },
+  {
+    name: "Kyllingewraps",
+    url: "https://www.valdemarsro.dk/kyllingewrap/",
+    ingredients: ["Wraps", "Kylling", "Salat"]
+  }
+];
+
+let recipes = [...allRecipes];
+let angle = 0;
+
+const canvas = document.getElementById("wheel");
+const ctx = canvas.getContext("2d");
+
+function drawWheel() {
+  const slice = (2 * Math.PI) / recipes.length;
+  recipes.forEach((r, i) => {
+    ctx.beginPath();
+    ctx.moveTo(150,150);
+    ctx.fillStyle = i % 2 ? "#fde68a" : "#bbf7d0";
+    ctx.arc(150,150,150, i*slice, (i+1)*slice);
+    ctx.fill();
+
+    ctx.save();
+    ctx.translate(150,150);
+    ctx.rotate(i*slice + slice/2);
+    ctx.fillStyle = "#111";
+    ctx.fillText(r.name, 60, 5);
+    ctx.restore();
+  });
+}
+
+drawWheel();
+
+function spin() {
+  angle += Math.random() * 2000 + 1000;
+  canvas.style.transition = "transform 4s cubic-bezier(.17,.67,.83,.67)";
+  canvas.style.transform = `rotate(${angle}deg)`;
+
+  setTimeout(() => {
+    const slice = 360 / recipes.length;
+    const index = Math.floor(((360 - (angle % 360)) / slice)) % recipes.length;
+    showResult(recipes[index]);
+  }, 4000);
+}
+
+function showResult(r) {
+  const div = document.getElementById("result");
+  div.innerHTML = `
+    <div class="card">
+      <h2>${r.name}</h2>
+      <a href="${r.url}" target="_blank">Se opskrift</a>
+      <h3>Indkøbsseddel</h3>
+      <ul>${r.ingredients.map(i => `<li>${i}</li>`).join("")}</ul>
+      <button onclick="spin()">Spin igen</button>
+      ${r.leftovers ? `<button class="secondary" onclick="useLeftovers(${JSON.stringify(r.leftovers)})">Brug rester i morgen</button>` : ""}
+    </div>
+  `;
+}
+
+function useLeftovers(names) {
+  recipes = allRecipes.filter(r => names.includes(r.name));
+  angle = 0;
+  ctx.clearRect(0,0,300,300);
+  drawWheel();
+}
+</script>
+
+</body>
+</html>
